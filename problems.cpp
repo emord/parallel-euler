@@ -1,6 +1,5 @@
 #include <cmath>
 #include <cstdint>
-#include <future>
 #include <iostream>
 #include <mutex>
 #include <thread>
@@ -95,6 +94,7 @@ uint_fast64_t problem10() {
 }
 
 uint_fast64_t problem16() {
+  // works because powers of 2 can be stored perfectly in a double
   double power = pow(2, 1000);
   uint_fast64_t result = 0;
   char buffer[1024];
@@ -132,7 +132,7 @@ std::function<void()> pull_job() {
     job_mutex.unlock();
     return y;
   } else {
-    return []() {};
+    return []() {}; //NOLINT(*)
   }
 }
 

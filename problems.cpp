@@ -6,8 +6,6 @@
 #include <vector>
 #include <queue>
 
-#include <typeinfo>
-
 #include "./libeuler.h"
 
 typedef uint_fast64_t (*EulerProblem)();
@@ -108,9 +106,8 @@ uint_fast64_t problem16() {
 
 void run_problem(uint_fast16_t prob_num, EulerProblem func) {
   auto result = func();
-  answer_mutex.lock();
+  std::lock_guard<std::mutex> lock(answer_mutex);
   std::cout << prob_num << " answer = " << result << std::endl;
-  answer_mutex.unlock();
 }
 
 void queue_jobs() {
@@ -125,11 +122,10 @@ void queue_jobs() {
 }
 
 std::function<void()> pull_job() {
-  job_mutex.lock();
+  std::lock_guard<std::mutex> lock(job_mutex);
   if (jobs.size() > 0) {
     auto y = jobs.front();
     jobs.pop();
-    job_mutex.unlock();
     return y;
   } else {
     return []() {}; //NOLINT(*)
